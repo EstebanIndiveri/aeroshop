@@ -16,7 +16,7 @@ const App = ()=> {
           <Container>
             <Route path='/' component={HomeScreen} exact/>
             <Route path='/product/:id' component={ProductScreen}/>
-
+            <Route path="/test" component={HomeScreen}/>
           </Container>
         </main>
         <Footer/>
