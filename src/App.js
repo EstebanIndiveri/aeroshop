@@ -4,6 +4,7 @@ import {HashRouter as Router,Route } from 'react-router-dom'
 // components
 import Footer from './components/Footer';
 import Header from './components/Header';
+import CartScreen from './views/CartScreen';
 import HomeScreen from './views/HomeScreen';
 import ProductScreen from './views/ProductScreen';
 
@@ -16,7 +17,7 @@ const App = ()=> {
           <Container>
             <Route path='/' component={HomeScreen} exact/>
             <Route path='/product/:id' component={ProductScreen}/>
-            <Route path="/test" component={HomeScreen}/>
+            <Route path="/cart/:id?" component={CartScreen}/>
           </Container>
         </main>
         <Footer/>
