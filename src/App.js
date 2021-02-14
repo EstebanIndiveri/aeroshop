@@ -13,6 +13,7 @@ import ProfileScreen from './views/ProfileScreen';
 import ShippingScreen from './views/ShippingScreen';
 import PaymentScreen from './views/PaymentScreen';
 import PlaceOrderScreen from './views/PlaceOrderScreen';
+import OrderScreen from './views/OrderScreen';
 
 const App = ()=> {
   return (
@@ -21,6 +22,7 @@ const App = ()=> {
         <Header/>
         <main className="py-3">
           <Container>
+            <Route path='/order/:id' component={OrderScreen}/>
             <Route path='/shipping' component={ShippingScreen}/>
             <Route path='/payment' component={PaymentScreen}/>
             <Route path='/placeorder' component={PlaceOrderScreen}/>

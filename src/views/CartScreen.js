@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux';
 import Message from '../components/Message';
 import {Link} from 'react-router-dom';
 import {Row,Col,ListGroup,Image,Form,Button,Card} from 'react-bootstrap';
-import Loader from '../components/Loader';
+// import Loader from '../components/Loader';
 import {addToCart,removeFromCart} from '../actions/cartActions';
 
 const CartScreen = ({match,location,history}) => {
