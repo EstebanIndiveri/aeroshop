@@ -4,10 +4,11 @@ import {useDispatch,useSelector} from 'react-redux';
 import Message from '../components/Message';
 import CheckOutSteps from '../components/CheckOutSteps';
 import { Link } from 'react-router-dom';
+import { createOrder } from '../actions/orderActions';
 
-function PlaceOrderScreen() {
+function PlaceOrderScreen({history}) {
     const cart=useSelector((state)=>state.cart)
-    // const dipatch=useDispatch();
+    const dispatch=useDispatch();
 
     // Calculate Prices
     const addDecimals=(num)=>{
@@ -18,10 +19,28 @@ function PlaceOrderScreen() {
     cart.shippingPrice=addDecimals(cart.itemsPrice>100?0:100);
     cart.taxPrice=addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
     cart.totalPrice=(Number(cart.itemsPrice)+Number(cart.shippingPrice)+Number(cart.taxPrice)).toFixed(2);
-    
+
+    const orderCreate=useSelector(state=>state.orderCreate);
+    const{order,success,error}=orderCreate;
+
+    useEffect(()=>{
+        if(success){
+            history.push(`/order/${order._id}`)
+        }
+        //eslint-disable-next-line
+    },[history,success])
 
     const placeOrderHandler=()=>{
-        console.log('place older')
+        // console.log('place older')
+        dispatch(createOrder({
+            orderItems:cart.cartItems,
+            shippingAddress:cart.shippingAddress,
+            paymentMethod:cart.paymentMethod,
+            itemsPrice:cart.itemsPrice,
+            shippingPrice:cart.shippingPrice,
+            taxPrice:cart.taxPrice,
+            totalPrice:cart.totalPrice
+        }))
     }
     return (
         <Fragment>
@@ -99,6 +118,12 @@ function PlaceOrderScreen() {
                                         <Col>$ {cart.totalPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
+                                {error&&
+                                (<ListGroup.Item>
+                                    {error&&<Message variant="danger">{error}</Message>}
+                                </ListGroup.Item>
+                                )}
+
                                 <ListGroup.Item>
                                     <Button type="button" className="btn btn-block" disabled={cart.cartItems===0} onClick={placeOrderHandler}>
                                         Place Order
