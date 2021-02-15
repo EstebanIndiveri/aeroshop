@@ -1,7 +1,7 @@
 import React,{useEffect, Fragment,useState} from 'react'
 import axios from 'axios';
 import {PayPalButton} from 'react-paypal-button-v2';
-import {Col,Row,ListGroup,Image,Card} from 'react-bootstrap'
+import {Col,Row,ListGroup,Image,Card,Button} from 'react-bootstrap'
 import {useDispatch,useSelector} from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -52,10 +52,19 @@ function OrderScreen({match}) {
             }
         }
     },[orderId,dispatch,successPay,order]);
-
     const successPaymentHandler=(paymentResult)=>{
         console.log(paymentResult)
         dispatch(payOrder(orderId,paymentResult))
+    }
+    const handleClickMercadoPago=async(order)=>{
+        // let url=`price=${order.totalPrice}&unit=${order.orderItems.length}&name=${"aeroshop"}&img=${"https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg"}`
+        // const config={
+        //     headers:{
+        //         'Content-Type':'application/json',
+        //     }
+        // }
+        // let response=await axios.post(`/payment/new?${url}`);
+        console.log(orderId) 
     }
 
     return (
@@ -152,7 +161,10 @@ function OrderScreen({match}) {
                                                 <Col>$ {order.totalPrice}</Col>
                                             </Row>
                                         </ListGroup.Item>
-                                            {!order.isPaid&&(
+                                                {order.paymentMethod==='Paypal'?
+
+                                                
+                                            !order.isPaid&&(
                                                 <ListGroup.Item>
                                                     {loadingPay&&<Loader/>}
                                                     {!sdkReady?<Loader/>:(
@@ -162,7 +174,17 @@ function OrderScreen({match}) {
                                                         />
                                                     )}
                                                 </ListGroup.Item>
-                                            )}
+                                            
+                                            ):order.paymentMethod==='MercadoPago'?(
+                                                <ListGroup.Item>
+                                                    <Button onClick={()=>handleClickMercadoPago(order)} className="btn btn-block btn-info">MercadoPago</Button>
+                                                </ListGroup.Item>
+                                            ):(
+                                                <ListGroup.Item>
+                                                    <Button className="btn btn-block">StripeButton</Button>
+                                                </ListGroup.Item>
+                                            )
+                                        }
                                     </ListGroup>
                                 </Card>
                             </Col>

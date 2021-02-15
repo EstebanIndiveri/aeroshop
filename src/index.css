@@ -28,3 +28,48 @@ h2{
 .rating span{
   margin:0.1rem;
 }
+/* button mercadopago */
+.mercadopago-button {
+  padding: 0 1.7142857142857142em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875em;
+  line-height: 2.7142857142857144;
+  background: #009ee3;
+  border-radius: 0.2857142857142857em;
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+}
+.mercadopago-button-error {
+  padding: 0 1.7142857142857142em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875em;
+  line-height: 2.7142857142857144;
+  background: #dc3545;
+  border-radius: 0.2857142857142857em;
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+}
+.mercadopago-button-pending {
+  padding: 0 1.7142857142857142em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875em;
+  line-height: 2.7142857142857144;
+  background: #ffc107;
+  border-radius: 0.2857142857142857em;
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+}
+.mercadopago-button-success {
+  padding: 0 1.7142857142857142em;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875em;
+  line-height: 2.7142857142857144;
+  background: #28a745;
+  border-radius: 0.2857142857142857em;
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+}
