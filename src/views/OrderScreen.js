@@ -56,16 +56,47 @@ function OrderScreen({match}) {
         console.log(paymentResult)
         dispatch(payOrder(orderId,paymentResult))
     }
-    const handleClickMercadoPago=async(order)=>{
-        // let url=`price=${order.totalPrice}&unit=${order.orderItems.length}&name=${"aeroshop"}&img=${"https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg"}`
-        // const config={
-        //     headers:{
-        //         'Content-Type':'application/json',
-        //     }
-        // }
-        // let response=await axios.post(`/payment/new?${url}`);
-        console.log(orderId) 
+    const createcheckOutButton=(preference)=>{
+        var script = document.createElement('script');
+        script.src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js";
+        script.type='text/javascript';
+        script.dataset.preferenceId=preference;
+        document.getElementById("button-checkout").innerHTML = "";
+        document.querySelector("#button-checkout").appendChild(script);
     }
+
+    const handleClickMercadoPago=async(order)=>{
+        let itemsDescription=[];
+        let nombres= order.orderItems;
+        nombres.forEach(item=>{
+            // console.log(item.name)
+            itemsDescription.push(item.name);
+        })
+        // console.log(itemsDescription)
+        // console.log()
+        var orderData={
+            quantity:1,
+            description:itemsDescription.toString(),
+            price:order.totalPrice
+        }
+            
+            fetch("/create_preference", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+            }).then(
+            function(response){
+                return response.json();
+            }
+        ).then(function(preference){
+            createcheckOutButton(preference.id);
+        }).catch(function(){
+            alert('error');
+        })
+    }
+    
 
     return (
         <Fragment>
@@ -178,6 +209,9 @@ function OrderScreen({match}) {
                                             ):order.paymentMethod==='MercadoPago'?(
                                                 <ListGroup.Item>
                                                     <Button onClick={()=>handleClickMercadoPago(order)} className="btn btn-block btn-info">MercadoPago</Button>
+
+                                                    <div id="button-checkout">
+                                                    </div>                 
                                                 </ListGroup.Item>
                                             ):(
                                                 <ListGroup.Item>
