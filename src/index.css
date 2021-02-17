@@ -39,6 +39,15 @@ h2{
   color: #fff;
   cursor: pointer;
   border: 0;
+  width: 100%;
+  height: 100%;
+}
+#button-checkout{
+  background-color: #009ee3 !important;
+
+}
+.mercadopago-button{
+  background-color: #009ee3 !important;
 }
 .mercadopago-button-error {
   padding: 0 1.7142857142857142em;

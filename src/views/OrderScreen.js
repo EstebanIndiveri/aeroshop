@@ -8,6 +8,13 @@ import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
 import { getOrderDetails, payOrder } from '../actions/orderActions';
 import {ORDER_PAY_RESET} from '../constants/orderConstants';
+import {loadStripe} from '@stripe/stripe-js';
+// import {Elements,CardElement} from '@stripe/react-stripe-js';
+
+const stripePromise=loadStripe('pk_test_51ILXZNGrmcGmCK47uGT7R2bf8O0Rqh7g2v623h9PZg54aoHRlCNGYWgYFnTVDiNsGG9oTwxKSZcPg1YZu5StfT3l00V1vBOcVE');
+
+
+
 
 function OrderScreen({match}) {
     const orderId=match.params.id;
@@ -51,6 +58,15 @@ function OrderScreen({match}) {
                 setSdkReady(true);
             }
         }
+        const query = new URLSearchParams(window.location.search)
+        if (query.get("success")) {
+            alert("Order placed! You will receive an email confirmation.");
+          }
+          if (query.get("canceled")) {
+            alert(
+              "Order canceled -- continue to shop around and checkout when you're ready."
+            );
+          }
     },[orderId,dispatch,successPay,order]);
     const successPaymentHandler=(paymentResult)=>{
         console.log(paymentResult)
@@ -72,15 +88,13 @@ function OrderScreen({match}) {
             // console.log(item.name)
             itemsDescription.push(item.name);
         })
-        // console.log(itemsDescription)
-        // console.log()
         var orderData={
             quantity:1,
             description:itemsDescription.toString(),
-            price:order.totalPrice
+            price:order.totalPrice,
+            id:orderId,
         }
-            
-            fetch("/create_preference", {
+            fetch(`/create_preference/${orderId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,7 +110,29 @@ function OrderScreen({match}) {
             alert('error');
         })
     }
-    
+
+    const handleClickStripe=async(order)=>{
+        // const stripe = await stripePromise;
+        // const response = await fetch("/create-checkout-session", {
+        //   method: "POST",
+        // });
+        // const session = await response.json();
+        // // When the customer clicks on the button, redirect them to Checkout.
+        // const result = await stripe.redirectToCheckout({
+        //   sessionId: session.id,
+        //   lineItems:[{
+        //       price:order.totalPrice,
+        //       quantity:1
+        //   }],
+        //   mode:'payment',
+        // });
+        // if (result.error) {
+        //   // If `redirectToCheckout` fails due to a browser or network
+        //   // error, display the localized error message to your customer
+        //   // using `result.error.message`.
+        // }
+        console.log(order)
+      };
 
     return (
         <Fragment>
@@ -206,16 +242,17 @@ function OrderScreen({match}) {
                                                     )}
                                                 </ListGroup.Item>
                                             
-                                            ):order.paymentMethod==='MercadoPago'?(
-                                                <ListGroup.Item>
-                                                    <Button onClick={()=>handleClickMercadoPago(order)} className="btn btn-block btn-info">MercadoPago</Button>
-
-                                                    <div id="button-checkout">
-                                                    </div>                 
-                                                </ListGroup.Item>
+                                            ):order.paymentMethod==='MercadoPago'?
+                                                    !order.isPaid&&(
+                                                        <ListGroup.Item>
+                                                        <Button id="button-checkout" onClick={()=>handleClickMercadoPago(order)} className="btn btn-block btn-info">MercadoPago</Button>
+                                                        </ListGroup.Item>
+                                                
                                             ):(
                                                 <ListGroup.Item>
-                                                    <Button className="btn btn-block">StripeButton</Button>
+                                                    <Button className="btn btn-block"
+                                                    onClick={()=>{handleClickStripe(order)}}
+                                                    >Stripe Button</Button>
                                                 </ListGroup.Item>
                                             )
                                         }
@@ -226,7 +263,6 @@ function OrderScreen({match}) {
                 </Fragment>
             
             )}
-                
         </Fragment>
     )
 }
