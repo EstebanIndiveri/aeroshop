@@ -16,7 +16,7 @@ import PlaceOrderScreen from './views/PlaceOrderScreen';
 import OrderScreen from './views/OrderScreen';
 import UserListScreen from './views/UserListScreen';
 import UserEditScreen from './views/UserEditScreen';
-import ProductListScreen from './views/ProductList';
+import ProductListScreen from './views/ProductListScreen';
 
 const App = ()=> {
   return (

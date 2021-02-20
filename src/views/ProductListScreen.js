@@ -4,7 +4,7 @@ import {Button,Table,Row,Col} from 'react-bootstrap'
 import {useDispatch,useSelector} from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listProducts } from '../actions/productActions';
+import { deleteProduct, listProducts } from '../actions/productActions';
 
 const ProductListScreen=({history,match})=>{
 
@@ -12,6 +12,9 @@ const ProductListScreen=({history,match})=>{
 
     const productList=useSelector(state=>state.productList);
     const {loading,error,products}=productList;
+
+    const productDelete=useSelector(state=>state.productDelete);
+    const {loading:loadingDelete,error:errorDelete,success:successDelete}=productDelete;
 
     const userLogin=useSelector(state=>state.userLogin);
     const {userInfo}=userLogin;
@@ -24,13 +27,15 @@ const ProductListScreen=({history,match})=>{
             history.push('/login');
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,history,userInfo])
+    },[dispatch,history,userInfo,successDelete])
 
     const deleteHandler=(id)=>{
         // console.log('delete',id)
-        // if(window.confirm('Are you sure')){
+        if(window.confirm('Are you sure')){
         //     dispatch(deleteUser(id))
         // }
+        dispatch(deleteProduct(id));
+        }
     }
     const createProductHandler=(product)=>{
         // 
@@ -49,6 +54,8 @@ const ProductListScreen=({history,match})=>{
                     </Button>
                 </Col>
             </Row>
+            {loadingDelete&&<Loader/>}
+            {errorDelete&&<Message variant="danger">{errorDelete}</Message>}
             {loading?<Loader/>:error?<Message variant="danger">{error}</Message>:(
                 <Table striped bordered hover responsive className="table-sm">
                     <thead>
