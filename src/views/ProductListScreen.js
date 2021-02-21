@@ -53,7 +53,7 @@ const ProductListScreen=({history,match})=>{
         // dispatch(craetepr)
         // dispatch(createProduct());
         dispatch(createProduct());
-        console.log('algo')
+        // console.log('algo')
     }
 
     return (
