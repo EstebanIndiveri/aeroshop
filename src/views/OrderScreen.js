@@ -143,8 +143,9 @@ function OrderScreen({match,history}) {
         console.log(order)
       };
 
-      const deliverHandler=(order)=>{
+      const deliverHandler=()=>{
         // 
+        // console.log(order);
         dispatch(deliverOrder(order));
       }
 
@@ -272,7 +273,7 @@ function OrderScreen({match,history}) {
                                             )
                                         }
                                         {loadingDeliver&&<Loader/>}
-                                        {userInfo?.isAdmin&&order.isPaid&&!order.isDElivered&&(
+                                        {userInfo?.isAdmin&&order.isPaid&&!order.isDelivered&&(
                                             <ListGroup.Item>
                                                 <Button type="button" className="btn btn-block" onClick={deliverHandler}>
                                                     Mark as Delivered
