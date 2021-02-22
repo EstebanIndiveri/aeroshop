@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import {listProductDetails,updateProduct} from '../actions/productActions'
 import FormContainer from '../components/FormContainer';
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import axios from 'axios';
 
 const ProductEditScreen = ({match,history}) => {
     const productId=match.params.id;
@@ -18,6 +19,8 @@ const ProductEditScreen = ({match,history}) => {
     const [category,setCategory]=useState('');
     const [countInStock,setCountInStock]=useState(0);
     const [description,setDescription]=useState('');
+    const [uploading,setUploading]=useState(false);
+
     
 
     const dispatch=useDispatch();
@@ -49,6 +52,23 @@ const ProductEditScreen = ({match,history}) => {
             }
         }
     },[product,dispatch,productId,history,successUpdate])
+
+    const uploadFileHandler=async(e)=>{
+        const file = e.target.files[0];
+        const formData=new FormData()
+        formData.append('image',file)
+        setUploading(true);
+        try{
+            const config={
+                'Content-Type':'multipart/form-data'
+            }
+            const {data}=await axios.post('/api/upload',formData,config);
+            setImage(data);
+            setUploading(false);
+        }catch(error){
+            console.log(error);
+        }
+    }
 
     const submitHandler=(e)=>{
         e.preventDefault();
@@ -91,6 +111,9 @@ const ProductEditScreen = ({match,history}) => {
                         <Form.Label>Image</Form.Label>
                          <Form.Control type="text" placeholder="Enter Image url" value={image} onChange={(e)=>setImage(e.target.value)}>
                          </Form.Control>
+                         <Form.File id="image-file" label="Choose File" custom onChange={uploadFileHandler}>
+                             {uploading&&<Loader/>}
+                         </Form.File>
                  </Form.Group>
  
                  <Form.Group controlId="brand">
