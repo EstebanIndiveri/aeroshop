@@ -6,8 +6,8 @@ import {useDispatch,useSelector} from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
-import {ORDER_PAY_RESET} from '../constants/orderConstants';
+import { getOrderDetails, payOrder,deliverOrder } from '../actions/orderActions';
+import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from '../constants/orderConstants';
 import {loadStripe} from '@stripe/stripe-js';
 // import {Elements,CardElement} from '@stripe/react-stripe-js';
 
@@ -16,7 +16,7 @@ const stripePromise=loadStripe('pk_test_51ILXZNGrmcGmCK47uGT7R2bf8O0Rqh7g2v623h9
 
 
 
-function OrderScreen({match}) {
+function OrderScreen({match,history}) {
     const orderId=match.params.id;
     const [sdkReady, setSdkReady] = useState(false);
 
@@ -28,6 +28,12 @@ function OrderScreen({match}) {
     const orderPay=useSelector(state=>state.orderPay);
     const{loading:loadingPay,success:successPay}=orderPay;
 
+    const orderDeliver=useSelector(state=>state.orderDeliver);
+    const{loading:loadingDeliver,success:successDeliver}=orderDeliver;
+
+    const userLogin=useSelector(state=>state.userLogin)
+    const{userInfo}=userLogin;
+
     if(!loading){
         // calculate ItemsPrice decimals
         const addDecimals=(num)=>{
@@ -37,6 +43,8 @@ function OrderScreen({match}) {
     }
 
     useEffect(()=>{
+        if(!userInfo)history.push('/login');
+
         const addPayPalScript=async()=>{
             const {data:clientId}=await axios.get('/api/config/paypal');
             const script=document.createElement('script');
@@ -48,8 +56,9 @@ function OrderScreen({match}) {
             }
             document.body.appendChild(script);
         }
-        if(!order || successPay || order?._id !==orderId){
+        if(!order || successPay || order?._id !==orderId ||successDeliver){
             dispatch({type:ORDER_PAY_RESET})
+            dispatch({type:ORDER_DELIVER_RESET})
             dispatch(getOrderDetails(orderId))
         } else if(!order.isPaid){
             if(!window.paypal){
@@ -67,7 +76,7 @@ function OrderScreen({match}) {
               "Order canceled -- continue to shop around and checkout when you're ready."
             );
           }
-    },[orderId,dispatch,successPay,order]);
+    },[orderId,dispatch,successPay,order,successDeliver]);
     const successPaymentHandler=(paymentResult)=>{
         console.log(paymentResult)
         dispatch(payOrder(orderId,paymentResult))
@@ -133,6 +142,12 @@ function OrderScreen({match}) {
         // }
         console.log(order)
       };
+
+      const deliverHandler=(order)=>{
+        // 
+        dispatch(deliverOrder(order));
+      }
+
 
     return (
         <Fragment>
@@ -256,6 +271,14 @@ function OrderScreen({match}) {
                                                 </ListGroup.Item>
                                             )
                                         }
+                                        {loadingDeliver&&<Loader/>}
+                                        {userInfo?.isAdmin&&order.isPaid&&!order.isDElivered&&(
+                                            <ListGroup.Item>
+                                                <Button type="button" className="btn btn-block" onClick={deliverHandler}>
+                                                    Mark as Delivered
+                                                </Button>
+                                            </ListGroup.Item>
+                                        )}
                                     </ListGroup>
                                 </Card>
                             </Col>
