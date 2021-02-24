@@ -12,6 +12,7 @@ const Header = () => {
     const{userInfo}=userLogin;
 
     const logoutHandler=()=>{
+        // clear localstorage
         dispatch(logout());
     }
 
