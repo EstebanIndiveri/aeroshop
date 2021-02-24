@@ -13,7 +13,7 @@ const HomeScreen = ({match}) => {
 
     const dispath=useDispatch();
     const productList=useSelector(state=>state.productList)
-    const{loading,error,products}=productList
+    const{loading,error,products,page,pages}=productList
     
     useEffect(()=>{
         dispath(listProducts(keyword,pageNumber))
@@ -34,6 +34,7 @@ const HomeScreen = ({match}) => {
                     </Col>
                 ))}
             </Row>
+            <Paginate pages={pages} page={page} keyword={keyword?keyword:''}/>
             </Fragment>
             )
         }
