@@ -6,12 +6,14 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { createProduct, deleteProduct, listProducts } from '../actions/productActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import Paginate from '../components/Paginate';
 const ProductListScreen=({history,match})=>{
+    const pageNumber=match.params.pageNumber || 1;
 
     const dispatch=useDispatch();
 
     const productList=useSelector(state=>state.productList);
-    const {loading,error,products}=productList;
+    const {loading,error,products,page,pages}=productList;
 
     const productDelete=useSelector(state=>state.productDelete);
     const {loading:loadingDelete,error:errorDelete,success:successDelete}=productDelete;
@@ -35,10 +37,10 @@ const ProductListScreen=({history,match})=>{
         if(successCreate){
             history.push(`/admin/product/${createdProduct._id}/edit`)
         }else{
-            dispatch(listProducts());
+            dispatch(listProducts('',pageNumber));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,history,userInfo,successDelete,successDelete,createdProduct])
+    },[dispatch,history,userInfo,successDelete,successDelete,createdProduct,pageNumber])
 
     const deleteHandler=(id)=>{
         // console.log('delete',id)
@@ -73,6 +75,7 @@ const ProductListScreen=({history,match})=>{
             {errorDelete&&<Message variant="danger">{errorDelete}</Message>}
             {errorCreate&&<Message variant="danger">{errorCreate}</Message>}
             {loading?<Loader/>:error?<Message variant="danger">{error}</Message>:(
+                <Fragment>
                 <Table striped bordered hover responsive className="table-sm">
                     <thead>
                         <tr>
@@ -112,6 +115,8 @@ const ProductListScreen=({history,match})=>{
                         ))}
                     </tbody>
                 </Table>
+                <Paginate pages={pages} page={page} isAdmin={true}/>
+                </Fragment>
             )}
         </Fragment>
     )

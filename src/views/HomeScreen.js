@@ -6,6 +6,7 @@ import {listProducts} from '../actions/productActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 const HomeScreen = ({match}) => {
     const keyword=match.params.keyword;
@@ -16,11 +17,14 @@ const HomeScreen = ({match}) => {
     const{loading,error,products,page,pages}=productList
     
     useEffect(()=>{
+    console.log(keyword)
+
         dispath(listProducts(keyword,pageNumber))
     },[dispath,match,keyword,pageNumber])
 
     return ( 
         <Fragment>
+            {keyword===undefined ? <ProductCarousel/>:null}
             <h1>Latest Products</h1>
             {loading?(<Loader/>):error?(<Message variant='danger'>{error}</Message>):
             (
