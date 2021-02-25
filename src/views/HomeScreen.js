@@ -7,6 +7,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
+import axios from 'axios';
 
 const HomeScreen = ({match}) => {
     const keyword=match.params.keyword;
@@ -17,8 +18,6 @@ const HomeScreen = ({match}) => {
     const{loading,error,products,page,pages}=productList
     
     useEffect(()=>{
-    console.log(keyword)
-
         dispath(listProducts(keyword,pageNumber))
     },[dispath,match,keyword,pageNumber])
 

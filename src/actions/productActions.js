@@ -162,7 +162,7 @@ export const listTopProducts=()=>async(dispatch)=>{
         dispatch({
             type:PRODUCT_PRODUCT_TOP_REQUEST
         })
-        const {data}=await axios.get(`/api/products/top`);
+        const {data}=await axios.get('/api/products/top');
         dispatch({
             type:PRODUCT_PRODUCT_TOP_SUCCESS,
             payload:data

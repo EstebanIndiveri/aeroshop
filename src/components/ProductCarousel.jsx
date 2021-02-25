@@ -14,7 +14,7 @@ const ProductCarousel = () => {
     const{loading,error,products}=productTopRated;
 
     useEffect(()=>{
-       dispatch(listTopProducts); 
+       dispatch(listTopProducts()); 
     },[dispatch])
 
     return loading?<Loader/>:error?<Message variant="danger">{error}</Message>:(
