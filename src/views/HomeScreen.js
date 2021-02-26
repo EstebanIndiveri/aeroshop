@@ -8,8 +8,8 @@ import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import axios from 'axios';
-import {Helmet} from 'react-helmet';
-
+import Meta from '../components/Meta';
+import { Link } from 'react-router-dom';
 const HomeScreen = ({match}) => {
     const keyword=match.params.keyword;
     const pageNumber=match.params.pageNumber || 1;
@@ -24,12 +24,8 @@ const HomeScreen = ({match}) => {
 
     return ( 
         <Fragment>
-            <Helmet>
-                <title>Welcome to aeroshop | Home</title>
-                <meta name="description" content="We sell the best products for cheap"/>
-                <meta name="keywords" content="electronics, buy electronics, cheap electronics"/>
-            </Helmet>
-            {keyword===undefined ? <ProductCarousel/>:null}
+            <Meta/>
+            {keyword===undefined ? <ProductCarousel/>:<Link to="/" className="btn btn-light">Go back</Link>}
             <h1>Latest Products</h1>
             {loading?(<Loader/>):error?(<Message variant='danger'>{error}</Message>):
             (

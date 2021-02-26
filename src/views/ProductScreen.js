@@ -7,6 +7,7 @@ import {listProductDetails,createProductReview} from '../actions/productActions'
 import {PRODUCT_CREATE_RESET} from '../constants/productConstants'
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import Meta from '../components/Meta';
 // import axios from 'axios';
 // import products from '../products';
 
@@ -52,6 +53,8 @@ const ProductScreen = ({match,history}) => {
             <Link className="btn btn-light my-3" to="/">Go Back</Link>
             {loading?(<Loader/>):error?(<Message variant="danter">{error}</Message>):(
                 <Fragment>
+            <Meta title={product.name} description={product.description}/>
+
             <Row>
                 <Col md={6}>
                     <Image src={product.image} alt={product.name} fluid/>
