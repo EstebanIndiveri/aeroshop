@@ -62,7 +62,8 @@ const ProductEditScreen = ({match,history}) => {
             const config={
                 'Content-Type':'multipart/form-data'
             }
-            const {data}=await axios.post('/api/upload',formData,config);
+            
+            const {data}=await axios.post('https://aeroshopapp.herokuapp.com/api/upload',formData,config);
             setImage(data);
             setUploading(false);
         }catch(error){
